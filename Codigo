@@ -1,0 +1,50 @@
+breed [ducks duck]
+to setup
+  clear-all
+  ask patches
+  [
+    if (pxcor = min-pxcor and pycor = max-pycor) [
+      set pcolor red
+    ]
+    if (pxcor = max-pxcor and pycor = min-pycor) [
+      set pcolor yellow
+    ]
+  ]
+  create-ducks 1
+    [
+      set size 2
+      setxy min-pxcor max-pycor
+    set shape "duck"
+    set color yellow
+    ]
+  reset-ticks
+end
+
+to go
+  ask ducks [
+    search
+    verificar-objetivo
+    stop
+  ]
+  tick
+end
+
+to search
+  let objetivo-visible patches in-radius 2 with [pcolor = yellow]
+  ifelse any? objetivo-visible [
+    face min-one-of objetivo-visible [distance myself]
+    fd 1
+  ] [
+    rt random 181 - random 90
+    fd 1
+  ]
+end
+
+to verificar-objetivo
+  if [pcolor] of patch-here = yellow [
+    ask patch-here [
+      set pcolor blue
+    ]
+    set heading 0
+  ]
+end
